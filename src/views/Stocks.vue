@@ -22,23 +22,10 @@
 
     <div style="padding-top: 20px;"></div>
     <div id="chart">
-        <apexchart type="candlestick" height="350" :options="chartOptions" :series="series"></apexchart>
+      <apexchart type="candlestick" height="350" :options="chartOptions" :series="series"></apexchart>
     </div>
     <div style="padding-top: 20px;"></div>
-    <div class="row">
-      <div v-for="(t, index) in TimeSeries" v-bind:key="t[0]">
-        <div class="card round ed">
-          <div class="card-body text-center" style="max-heigth:210px;">
-            <div>Date: {{index}}</div>
-            <div>Open: {{t["1. open"]}}</div>
-            <div>High: {{t["2. high"]}}</div>
-            <div>Low: {{t["3. low"]}}</div>
-            <div>Close: {{t["4. close"]}}</div>
-            <div>Volume:{{t["5. volume"]}}</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    
   </div>
 </template>
 
@@ -47,6 +34,7 @@ export default {
   name: "Stocks",
   data: function() {
     return {
+      symbol: null,
       searchedSymbol: null,
       information: null,
       lastRefreshed: null,
@@ -55,8 +43,7 @@ export default {
       TimeSeries: null,
       series: [
         {
-          data: [
-          ]
+          data: []
         }
       ],
       chartOptions: {
@@ -78,7 +65,7 @@ export default {
         }
       }
     };
-  },
+  },    
   methods: {
     GetTimeSeriesIntraDay: function() {
       fetch(
@@ -92,31 +79,25 @@ export default {
           return response.json();
         })
         .then(data => {
-          console.log(data);
+          
+          //Get basic informations
           this.information = data["Meta Data"]["1. Information"];
           this.searchedSymbol = data["Meta Data"]["2. Symbol"];
           this.lastRefreshed = data["Meta Data"]["3. Last Refreshed"];
           this.interval = data["Meta Data"]["4. Interval"];
           this.timeZone = data["Meta Data"]["6. Time Zone"];
           this.TimeSeries = data["Time Series (5min)"];
-
-          //Liste toutes les dates
-          Object.keys(this.TimeSeries).forEach((key) => {
-            var serie = {
-              x: new Date(key),
-              y: [
-                parseFloat(this.TimeSeries[key]["1. open"]),
-                parseFloat(this.TimeSeries[key]["2. high"]),
-                parseFloat(this.TimeSeries[key]["3. low"]),
-                parseFloat(this.TimeSeries[key]["4. close"])
-              ]
-            };
+          
+          //Makes sure the candlestick chart reset
+          this.series[0].data = [];
+          
+          // For every series in timeseries, do this:
+          Object.keys(this.TimeSeries).forEach(key => {
+            var date = new Date(key)
+            var dateMilli = date.getTime();
+            var serie = [dateMilli, parseFloat(this.TimeSeries[key]["1. open"]), parseFloat(this.TimeSeries[key]["2. high"]), parseFloat(this.TimeSeries[key]["3. low"]), parseFloat(this.TimeSeries[key]["4. close"])];
             this.series[0].data.push(serie);
-            console.log(key);
-            console.log(key, this.TimeSeries[key]);
           });
-
-          //this.series[0].data[0].x = 1000;
           console.log(this.series);
         });
     }
