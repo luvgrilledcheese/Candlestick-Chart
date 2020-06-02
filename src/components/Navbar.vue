@@ -8,6 +8,9 @@
         <li class="nav-item active">
           <router-link class="nav-link" to="/Stocks">Stocks</router-link>
         </li>
+        <li class="nav-item active">
+          <router-link class="nav-link" to="/test">test</router-link>
+        </li>
       </ul>
     </div>
   </nav>
