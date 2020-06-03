@@ -22,7 +22,7 @@
 
     <div style="padding-top: 20px;"></div>
     <div id="chart">
-      <apexchart type="candlestick" height="350" :options="chartOptions" :series="series"></apexchart>
+      <apexchart type="candlestick" height="350" :options="chartOptions" :series="series" :key="componentKey"></apexchart>
     </div>
     <div style="padding-top: 20px;"></div>
     
@@ -34,6 +34,7 @@ export default {
   name: "Stocks",
   data: function() {
     return {
+      componentKey: 0,
       symbol: null,
       searchedSymbol: null,
       information: null,
@@ -94,16 +95,18 @@ export default {
           // For every series in timeseries, do this:
           Object.keys(this.TimeSeries).forEach(key => {
             var date = new Date(key)
-            var dateMilli = date.getTime();
+            var dateMilli = date.getTime() - 10800000 + 30000;
             var serie = [dateMilli, parseFloat(this.TimeSeries[key]["1. open"]), parseFloat(this.TimeSeries[key]["2. high"]), parseFloat(this.TimeSeries[key]["3. low"]), parseFloat(this.TimeSeries[key]["4. close"])];
             this.series[0].data.push(serie);
           });
-          console.log(this.series);
+
+          // Re-renderning the candlestick chart
+          this.componentKey += 1;
         });
     }
   }
 };
-</script>
+</script> 
 
 <style scoped>
 a {
