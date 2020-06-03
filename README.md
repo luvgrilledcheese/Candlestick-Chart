@@ -1,5 +1,5 @@
-# richi
-aaaaaaaa
+# Candlestick chart
+My first project in VueJS. Shows a candlestick chart for any stock!
 ## Project setup
 ```
 npm install
