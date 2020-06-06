@@ -1,5 +1,7 @@
 # Candlestick chart
-My first project in VueJS. Shows a candlestick chart for any stock!
+Personal Vue project. Shows a candlestick chart for any stock using the Alpha Vantage API and ApexCharts librairie.
+
+
 ## Project setup
 ```
 npm install
